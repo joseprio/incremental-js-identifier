@@ -1,0 +1,32 @@
+{
+  "name": "incremental-js-identifier",
+  "version": "0.1.0",
+  "description": "Utility to create incremental JS identifiers",
+  "main": "incremental-js-identifier",
+  "files": [
+    "incremental-js-identifier.js"
+  ],
+  "engines": {
+    "node": ">=4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/joseprio/incremental-js-identifier.git"
+  },
+  "keywords": [
+    "incremental",
+    "id"
+  ],
+  "author": "Josep del Rio <peprio@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/joseprio/incremental-js-identifier/issues"
+  },
+  "homepage": "https://github.com/joseprio/incremental-js-identifier",
+  "devDependencies": {
+    "jest": "24.9.0"
+  },
+  "scripts": {
+    "test": "jest"
+  }
+}
