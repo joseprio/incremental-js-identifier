@@ -27,8 +27,10 @@ nextID(); // -> C
 ...
 nextID(); // -> _
 nextID(); // -> AA
+nextID(); // -> BA
 ...
-nextID(); // -> A_
+nextID(); // -> $_
+nextID(); // -> __
 nextID(); // -> A0
 ```
 
@@ -36,11 +38,15 @@ nextID(); // -> A0
 ## API
 
 ### idGenerator([options]) ⇒ `function`
-Returns a function that will return a new, incrementing identifier each time it is called.
+Returns a function that will return a new, incrementing identifier each time it is called without arguments, or an identifier
+created from a number defined as the first parameter.
+
+Will throw if passed a number that was already used.
+
+The incremental mode will skip any number that was already created.
 
 | Param | Type | Description |
 |-------|------|-------------|
-| [options.prefix] | string | A prefix to prepend to every generated identifier. |
 | [options.validFirstCharacters] | string | The characters that are valid at the start of the identifier. Defaults to `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_`.<br>Must not contain duplicate characters. |
 | [options.validCharacters] | string | The characters that are valid from the second position in the identifier. Defaults to `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_0123456789`.<br>Must not contain duplicate characters. |
 
@@ -49,7 +55,7 @@ Returns a function that will return a new, incrementing identifier each time it 
 ```js
 const idGenerator = require('incremental-js-identifier');
 
-const nextPrefixedID = idGenerator({prefix: '_'});
+const nextPrefixedID = idGenerator({validFirstCharacters: '_'});
 nextPrefixedID(); // -> _A
 nextPrefixedID(); // -> _B
 nextPrefixedID(); // -> _C

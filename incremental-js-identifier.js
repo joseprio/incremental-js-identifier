@@ -13,42 +13,56 @@
 // possible in bytes. For simplicity, no Unicode characters are used.
 
 function incrementalJSIdentifier(options) {
-    const prefix = options && options.prefix || '';
     const validFirstCharacters = options && options.validFirstCharacters || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_';
     const validCharacters = options && options.validCharacters || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz$_0123456789';
 
-    const charIndices = [0];
+    let counter = 0;
+	const calculatedNumbers = new Set();
 
-    return function() {
-        let nextID = prefix;
+	function compute(fromNumber, isFirst = true) {
+		const characters = isFirst ? validFirstCharacters : validCharacters;
+		const divided = Math.floor(fromNumber / characters.length);
+		const remainder = fromNumber % characters.length;
+        return `${characters[remainder]}${divided > 0 ? compute(divided - 1, false) : ''}`;
+    }
 
-        // Build the next ID
-        nextID += validFirstCharacters[charIndices[0]];
-        for (let i = 1; i < charIndices.length; i++) {
-            nextID += validCharacters[charIndices[i]];
-        }
-
-        // Set up the indices for the next one
-        for (let i = charIndices.length - 1; i >= 0; i--) {
-            if (i > 0) {
-                if (charIndices[i] < validCharacters.length - 1) {
-                    charIndices[i]++;
-                    break;
-                }
-                // This needs to be reset
-                charIndices[i] = 0;
-            } else {
-                if (charIndices[0] < validFirstCharacters.length - 1) {
-                    charIndices[0]++;
-                } else {
-                    charIndices[0] = 0;
-                    charIndices.push(0);
-                }
+    const computator = function(fromNumber) {
+        if (fromNumber != null) {
+            // Arbitrary generation
+            if (fromNumber < counter || calculatedNumbers.has(counter)) {
+                throw new Error(`Already computed number ${fromNumber}`);
             }
+            calculatedNumbers.add(fromNumber);
+            if (fromNumber === counter) {
+                counter++;
+            }
+            return compute(fromNumber);
         }
 
+        // Incremental generation
+        const nextID = compute(counter);
+        do {
+			// Clean up arbitrarily generated if needed
+            calculatedNumbers.delete(counter);
+            counter++;
+        } while (calculatedNumbers.has(counter));
         return nextID;
     };
+
+    computator.combinationsFor = function(numCharacters) {
+        if (numCharacters < 1) {
+            throw new Error('Number must be larger than zero');
+        }
+        let total = 0;
+        for (let c=0; c<numCharacters; c++) {
+            total += validFirstCharacters.length * Math.pow(validCharacters.length, c);
+        }
+        if (total > Number.MAX_SAFE_INTEGER) {
+            throw new Error('Combinations exceed the maximum safe integer');
+        }
+        return total;
+    };
+    return computator;
 }
 
 module.exports = incrementalJSIdentifier;
