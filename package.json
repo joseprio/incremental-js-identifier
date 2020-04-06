@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/joseprio/incremental-js-identifier",
   "devDependencies": {
-    "jest": "24.9.0"
+    "jest": "^25.2.7"
   },
   "scripts": {
     "test": "jest"
